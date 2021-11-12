@@ -48,3 +48,12 @@ contract("Dex", accounts => {
         }
     })
 })
+
+//when creating a sell market order, the seller needs to have enough tokens for the trade
+//when creating a BUY market order, the buyer needs to have enough eth for the trade
+//market orders can be submitted even if the order book is empty
+//market order should be filled until the order book is empty or the market order is 100% fulfilled
+//the eth balance of the buyer should decrease with the filled amount
+//the token balance of the seller should decrease with the filled amounts
+//filled limit orders should be removed from the orderbook
+ 

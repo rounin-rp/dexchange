@@ -51,10 +51,10 @@ contract Dex is Wallet{
 
     function createLimitOrder(uint _orderType, bytes32 _ticker, uint _amount, uint _price)public {
         if(_orderType == 0){
-            require(balances[msg.sender][ethTicker] >= _amount.mul(_price),"Not enough ether for the order");
+            require(balances[msg.sender][ethTicker] >= _amount.mul(_price),"Not enough ETH for the order");
         }
         else{
-            require(balances[msg.sender][_ticker] >= _amount.mul(_price),"Not enough tokens for the order");
+            require(balances[msg.sender][_ticker] >= _amount,"Not enough token for the order");
         }
         Order memory _temp;
         _temp.id = orderBook[_ticker][_orderType].length;

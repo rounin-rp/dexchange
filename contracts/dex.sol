@@ -21,27 +21,27 @@ contract Dex is Wallet{
 
     mapping(bytes32 => mapping(uint => Order[])) orderBook;
 
-    function _sort(bytes32 _ticker, uint _type, Order memory _temp)private{
-        if(_type == 0 ){
-            for(uint i=0; i<orderBook[_ticker][_type].length-1; i++){
-                if(orderBook[_ticker][_type][i].price < _temp.price){
-                    Order memory _swap = orderBook[_ticker][_type][i];
-                    orderBook[_ticker][_type][i] = _temp;
-                    _temp = _swap;
+    function _sort(bytes32 _ticker,uint _type)private{
+        if(orderBook[_ticker][_type].length > 1){
+            Order[] storage array = orderBook[_ticker][_type];
+            if(_type == 0 ){
+                uint index = orderBook[_ticker][_type].length - 1;
+                while(index > 0 && array[index].price > array[index - 1].price){
+                    Order storage temp = array[index];
+                    array[index] = array[index - 1];
+                    array[index - 1 ] = temp;
+                    index--;
                 }
             }
-            orderBook[_ticker][_type][orderBook[_ticker][_type].length - 1] = _temp; // swapping the last element to its place
-
-        }
-        else if(_type == 1 ){
-            for(uint i=0; i<orderBook[_ticker][_type].length-1; i++){
-                if(orderBook[_ticker][_type][i].price > _temp.price){
-                    Order memory _swap = orderBook[_ticker][_type][i];
-                    orderBook[_ticker][_type][i] = _temp;
-                    _temp = _swap;
+            else if(_type == 1 ){
+                uint index = orderBook[_ticker][_type].length - 1;
+                while(index > 0 && array[index].price < array[index - 1].price){
+                    Order storage temp = array[index];
+                    array[index] = array[index - 1];
+                    array[index - 1 ] = temp;
+                    index--;
                 }
             }
-            orderBook[_ticker][_type][orderBook[_ticker][_type].length - 1] = _temp;
         }
     }
 
@@ -64,7 +64,7 @@ contract Dex is Wallet{
         _temp.amount = _amount;
         _temp.price = _price;
         orderBook[_ticker][_orderType].push(_temp);
-        _sort(_ticker,_orderType,_temp);
+        _sort(_ticker,_orderType);
     }
 
     function getOrderBook(bytes32 _ticker, uint _type)public view returns(Order[] memory){

@@ -70,4 +70,8 @@ contract Dex is Wallet{
     function getOrderBook(bytes32 _ticker, uint _type)public view returns(Order[] memory){
         return orderBook[_ticker][_type];
     }
+
+    function createMarketOrder(uint _orderType, bytes32 _ticker, uint _amount)public{
+
+    }
 }

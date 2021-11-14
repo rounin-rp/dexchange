@@ -7,7 +7,7 @@ const Link = artifacts.require("Link");
 const truffleAssert = require("truffle-assertions");
 
 contract("Dex", accounts => {
-
+    //limit order testing
     it("should have eth deposited such that deposited eth >= buy order value", async()=> {
         let dex = await Dex.deployed();
         var ticker = web3.utils.fromUtf8("LNK");
@@ -46,6 +46,30 @@ contract("Dex", accounts => {
         for(var i=0; i<orderBook.length - 1; i++){
             assert(orderBook[i].price <= orderBook[i+1].price,"not the right order in sell book");
         }
+    })
+
+    //Market Order testing starts here
+    it("should not let the sell order place if the seller does not have enough tokens for the trade",async() => {
+        let dex = await Dex.deployed();
+        let link = await Link.deployed();
+        var ticker = web3.utils.fromUtf8("LNK");
+        await dex.addToken(ticker, link.address);
+        await link.approve(dex.address,10000);
+        await dex.deposit(ticker,10);
+        await truffleAssert.passes(
+            dex.createMarketOrder(1,ticker,1)
+        )
+    })
+    it("Should not let the buyer buy if buyer does not have enough eth for the trade",async ()=>{
+        let dex = await Dex.deployed();
+        let link = await Link.deployed();
+        var ticker = web3.utils.fromUtf8("LNK");
+        await dex.addToken(ticker, link.address);
+        await link.approve(dex.address,10000);
+        await dex.deposit(ticker,10);
+        await truffleAssert.passes(
+            dex.createMarketOrder(0,ticker,1)
+        )
     })
 })
 

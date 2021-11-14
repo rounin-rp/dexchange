@@ -56,4 +56,4 @@ contract("Dex", accounts => {
 //the eth balance of the buyer should decrease with the filled amount
 //the token balance of the seller should decrease with the filled amounts
 //filled limit orders should be removed from the orderbook
- 
+

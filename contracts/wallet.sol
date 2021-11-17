@@ -31,14 +31,14 @@ contract Wallet{
         tokenMapping[_ticker] = Token(_ticker,_tokenAddress);
         tokenList.push(_ticker);
     }
-
+    //function transfers the amount from token contract to this contract
     function deposit(bytes32 _ticker, uint256 _amount)tokenExists(_ticker) external{
         IERC20(tokenMapping[_ticker].tokenAddress).transferFrom(msg.sender, address(this), _amount);
         uint balance = balances[msg.sender][_ticker];
         balances[msg.sender][_ticker] = balances[msg.sender][_ticker].add(_amount);
         assert(balances[msg.sender][_ticker] == balance + _amount);
     }
-
+    // function transfers amount from this contract to the token contract 
     function withdraw(bytes32 _ticker, uint256 _amount)tokenExists(_ticker) external{
         require(balances[msg.sender][_ticker] >= _amount,"Insufficient balance!");
         balances[msg.sender][_ticker] = balances[msg.sender][_ticker].sub(_amount);
